@@ -1,0 +1,39 @@
+---
+- name: Install and Configure Node Exporter
+  hosts: prod
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - wget
+          - tar
+        state: present
+      become: yes
+
+    - name: Download Node Exporter
+      get_url:
+        url: https://github.com/prometheus/node_exporter/releases/download/v1.5.0/node_exporter-1.5.0.linux-amd64.tar.gz
+        dest: /opt/node_exporter-1.5.0.linux-amd64.tar.gz
+      become: yes
+
+    - name: Extract Node Exporter
+      unarchive:
+        src: /opt/node_exporter-1.5.0.linux-amd64.tar.gz
+        dest: /opt/
+      become: yes
+
+    - name: Rename Node Exporter directory
+      command: mv /opt/node_exporter-1.5.0.linux-amd64 /opt/node_exporter
+      become: yes
+
+    - name: Start Node Exporter
+      command: /opt/node_exporter/node_exporter
+      async: 0
+      poll: 0
+      become: yes

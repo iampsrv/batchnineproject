@@ -1,0 +1,6 @@
+.hintrc
+.terraform.lock.hcl
+.terraform/
+app/
+terraform.tfstate
+terraform.tfstate.backup
